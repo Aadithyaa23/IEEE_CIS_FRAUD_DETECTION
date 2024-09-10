@@ -1,0 +1,49 @@
+The dataset for this fraud detection challenge comes from Vesta Corporation and contains real-world e-commerce transactions. The dataset is divided into two main parts: transaction data and identity data. Here’s a detailed breakdown of the dataset and its features:
+
+1. Transaction Data
+This part of the dataset contains information related to the transactions themselves, including various details about payment methods, addresses, emails, and the transaction amount.
+
+Key Features in Transaction Data:
+TransactionID: A unique identifier for each transaction.
+TransactionDT: Represents the time when the transaction occurred, but it's given as a timedelta from an unknown reference point rather than an actual timestamp. You can use this to extract features such as day of the week, hour of the day, etc., which may help detect fraud patterns.
+TransactionAmt: The amount of money involved in the transaction. It’s a key feature since fraudsters may behave differently when making low- or high-value transactions.
+ProductCD: A categorical feature indicating the type of product for which the transaction was made. Different product categories could be more prone to fraud.
+card1 – card6: These features correspond to anonymized information about the payment card used for the transaction. Each of these fields likely refers to aspects such as card number, card type, card issuing bank, etc. Some cards might be more susceptible to fraud than others.
+addr1, addr2: Address information, likely indicating the billing region and country. Fraudulent transactions might show inconsistencies or unusual patterns in location data.
+dist1, dist2: Distance features, possibly indicating the distance between the user’s billing address and the transaction address. Suspicious distances may correlate with fraud.
+P_emaildomain: The email domain of the purchaser. Certain email domains might be more associated with fraudulent behavior.
+R_emaildomain: The email domain of the recipient. This could be useful in detecting discrepancies between the purchaser’s and recipient’s information.
+C1 – C14: Count variables with anonymized information, possibly related to historical behavior, such as the number of transactions made, the number of times a specific payment method was used, or frequency of product purchases.
+M1 – M9: Binary features that represent match status between various fields (e.g., whether billing address matches shipping address or whether the card used matches the stored card). These flags could indicate suspicious inconsistencies.
+V1 – V339: These are anonymized engineered features, likely calculated by Vesta’s internal fraud prevention system. They are thought to represent various interaction terms and aggregations. These may include interactions between products, device types, addresses, etc., all aimed at detecting fraud patterns.
+2. Identity Data
+This part contains additional information about the user’s device, network, and internet behavior during the transaction. Not all transactions have identity information, but when present, these features can significantly enhance the model’s predictive power.
+
+Key Features in Identity Data:
+DeviceType: Categorical feature indicating whether the transaction was made on a mobile device or a desktop computer. Fraudsters might favor certain types of devices.
+DeviceInfo: Information about the device model or browser used for the transaction. Older or less common devices may be linked to suspicious behavior.
+id_01 – id_11: Continuous or categorical variables containing information about the user’s digital identity, such as IP address features, digital fingerprint, or behavioral patterns. These features may indicate anomalies if the user’s behavior deviates from their usual profile.
+id_12 – id_38: A mixture of binary, categorical, and continuous features. These likely represent additional information about the user’s device, operating system, browser plugins, and even proxy usage. Suspicious configurations (e.g., outdated browsers, use of VPNs) could indicate fraud.
+Categorical Features Breakdown
+Some key categorical features in both the transaction and identity data include:
+
+ProductCD: The type of product associated with the transaction (e.g., food, electronics).
+card1 – card6: Various anonymized details about the card used, such as the card issuer, card network, and possibly the type of account.
+addr1, addr2: Geographical regions linked to the billing address, anonymized to preserve privacy.
+P_emaildomain, R_emaildomain: The email domain used by the purchaser (P) and the recipient (R), which could reflect potential mismatches or suspicious email providers.
+M1 – M9: Binary flags indicating if certain attributes match between different fields (e.g., shipping address vs billing address).
+DeviceType: Whether the transaction was made via desktop or mobile.
+DeviceInfo: The type or brand of the device used for the transaction (e.g., iPhone, Windows laptop).
+id_12 – id_38: A collection of identity-related features (mostly binary or categorical) providing more details on how the transaction was conducted.
+Target Variable
+isFraud: This is the target variable, where 1 indicates that the transaction is fraudulent, and 0 indicates that it is not.
+Additional Insights
+Time-Related Features: Using TransactionDT, you can create new features like:
+Day of the week: Fraudulent activity may peak on certain days.
+Hour of the day: Certain hours, like late at night, could be more prone to fraud.
+Transaction Amount Buckets: You can also segment TransactionAmt into buckets (low, medium, high) to understand how fraud behavior correlates with transaction size.
+Potential Feature Engineering
+Aggregations: Group transactions by card1, card2, or addr1, and calculate statistics (mean, standard deviation) on TransactionAmt or isFraud. This helps capture fraudulent behaviors at the group level.
+User Activity: Count the number of transactions per user (card1, card2), or calculate time deltas between consecutive transactions for the same user.
+Device Anomalies: Check for uncommon devices or rare combinations of DeviceType and DeviceInfo that could signal fraudulent activity.
+By analyzing and engineering features carefully, you can capture the nuances in the dataset that distinguish fraudulent from legitimate transactions, helping to build a robust fraud detection model.
